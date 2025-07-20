@@ -12,11 +12,12 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from tqdm import tqdm
 from sklearn.linear_model import BayesianRidge
 from scipy.stats import linregress
+import os
 
 warnings.simplefilter("ignore", category=RuntimeWarning)
 
 app = Flask(__name__, static_folder="static")
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://gscf-8b2v.onrender.com"]}}, supports_credentials=True)
+CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://gsci-frontend.onrender.com"]}}, supports_credentials=True)
 
 
 
@@ -111,6 +112,10 @@ run_ridge_interval_analysis()
 @app.route('/')
 def index():
     return render_template("home.html")
+
+@app.route('/healthz')
+def health_check():
+    return jsonify({"status": "healthy", "timestamp": time.time()}), 200
 
 @app.route('/predict')
 def predict_page():
@@ -208,14 +213,14 @@ def api_predict():
             max_k = min(10, len(X))
             wcss = []
             for k in range(1, max_k + 1):
-                kmeans = KMeans(n_clusters=k, random_state=42, n_init=10).fit(X)
+                kmeans = KMeans(n_clusters=k, random_state=42, n_init="auto").fit(X)
                 wcss.append(kmeans.inertia_)
             try:
                 knee = KneeLocator(range(1, max_k + 1), wcss, curve='convex', direction='decreasing')
                 optimal_k = knee.knee if knee.knee is not None else 1
             except Exception:
                 optimal_k = 1
-            kmeans = KMeans(n_clusters=optimal_k, random_state=42, n_init=10).fit(X)
+            kmeans = KMeans(n_clusters=optimal_k, random_state=42, n_init="auto").fit(X)
             valid['cluster'] = kmeans.predict(X)
             key = (pred_year, troop_id, cookie)
             if key not in clusters_by_year:
@@ -772,4 +777,5 @@ def su_predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

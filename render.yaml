@@ -9,7 +9,7 @@ services:
       - key: GOOGLE_APPLICATION_CREDENTIALS
         value: backend/automation/cookie-drive-bot.json
       - key: DATABASE_URL
-        value: <postgresql://cookies_sales_db_user:8AdRDKhNVRYsNojdvFUiAg61rexSMPKr@dpg-d1arinnfte5s73dpbn2g-a.oregon-postgres.render.com/cookies_sales_db>
+        value: <postgresql://cookie_admin:IjZUjKYNaK29BU9Z0GZGiauQKvQbueG7@dpg-d1s7k0buibrs73a3fglg-a.oregon-postgres.render.com/cookie_sales_db>
 
 jobs:
   - type: cron
@@ -22,4 +22,4 @@ jobs:
       - key: GOOGLE_APPLICATION_CREDENTIALS
         value: backend/automation/cookie-drive-bot.json
       - key: DATABASE_URL
-        value: <postgresql://cookies_sales_db_user:8AdRDKhNVRYsNojdvFUiAg61rexSMPKr@dpg-d1arinnfte5s73dpbn2g-a.oregon-postgres.render.com/cookies_sales_db>
+        value: <postgresql://cookie_admin:IjZUjKYNaK29BU9Z0GZGiauQKvQbueG7@dpg-d1s7k0buibrs73a3fglg-a.oregon-postgres.render.com/cookie_sales_db>
